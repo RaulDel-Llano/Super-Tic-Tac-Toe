@@ -5,11 +5,19 @@ var OColor = 'blue';
 $( document ).ready(function() {
     console.log( "ready!" );
     $(".Medium div").click(onClick);
-    setNextPlayer();
+    setNextPlayer(nextPlayer);
 });
 
-function setNextPlayer() {
-	$("#panel").text("Next Turn: "+nextPlayer)
+function setNextPlayer(player) {
+	$("#panel").removeClass()
+	$("#panel").addClass("next"+player)
+	$("#panel").text("Next Turn: "+player)
+}
+
+function setWinner(winner) {
+	$("#panel").removeClass()
+	$("#panel").addClass("winner"+winner)
+	$("#panel").text("Winner: "+winner)
 }
 
 function onClick(evt) {
@@ -23,24 +31,25 @@ function onClick(evt) {
 
 	$(this).text(nextPlayer);
 	$(this).data('winner', nextPlayer)
-	$(this).css( "color", nextPlayer == 'X' ? XColor : OColor );
+	$(this).addClass( "square"+ nextPlayer);
 
 	nextPlayer = nextPlayer == 'X' ? 'O' : 'X';
 
 	var winner = winnerOf(parent);
 	if (winner) {
-		$(parent).css("background-color", winner == 'X' ? XColor : OColor );
+	 	$(parent).addClass( "square"+ winner);
 		$(parent).data('winner', winner);
 
 		var gameWinner = winnerOf(grandparent);
 		if ( gameWinner ) {
 			$(grandparent).data('winner', gameWinner);
-			alert( gameWinner + " WINS");
+			setWinner(gameWinner);
+			return;
 		}
 
 	}
 
-	setNextPlayer();
+	setNextPlayer(nextPlayer);
 }
 
 
