@@ -1,12 +1,18 @@
+var nextPlayer = 'X';
+var XColor = 'red';
+var OColor = 'blue';
+
 $( document ).ready(function() {
     console.log( "ready!" );
-    $("div div div").click(onClick);
+    $(".Medium div").click(onClick);
+    setNextPlayer();
 });
 
-var nextPlayer = 'X';
+function setNextPlayer() {
+	$("#panel").text("Next Turn: "+nextPlayer)
+}
 
 function onClick(evt) {
-	console.log("clicked !")
 	var parent = $(this).parent();
 	var grandparent = $(parent).parent();
 
@@ -17,13 +23,13 @@ function onClick(evt) {
 
 	$(this).text(nextPlayer);
 	$(this).data('winner', nextPlayer)
-	$(this).css( "color", nextPlayer == 'X' ? "red" : "blue" );
+	$(this).css( "color", nextPlayer == 'X' ? XColor : OColor );
 
 	nextPlayer = nextPlayer == 'X' ? 'O' : 'X';
 
 	var winner = winnerOf(parent);
 	if (winner) {
-		$(parent).css("background-color", winner == 'X' ? "red" : "blue");
+		$(parent).css("background-color", winner == 'X' ? XColor : OColor );
 		$(parent).data('winner', winner);
 
 		var gameWinner = winnerOf(grandparent);
@@ -33,6 +39,8 @@ function onClick(evt) {
 		}
 
 	}
+
+	setNextPlayer();
 }
 
 
@@ -52,8 +60,8 @@ function winnerOf(game) {
 	var boxes = []
 
 	$(game).children("div").each(function( index ) {
-		var label = $(this).data('winner');
-		boxes[index] = label;
+		var winner = $(this).data('winner');
+		boxes[index] = winner ? winner : index;
 	}); 
 
 	for ( var i = 0; i < winnerChecks.length; i++) {
@@ -62,7 +70,7 @@ function winnerOf(game) {
 		var second = check[1] -1;
 		var third = check[2] -1;
 
-		if( boxes[first] == boxes[second] && boxes[first] == boxes[third])
+		if( boxes[first] && boxes[first] == boxes[second] && boxes[first] == boxes[third])
 			return boxes[first];
 	}
 	return null;
